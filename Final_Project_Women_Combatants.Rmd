@@ -1,0 +1,260 @@
+---
+title: "Final Project - Women Combatants"
+author: "Ryan Goehrung"
+date: "3/9/2018"
+output: html_document
+---
+
+**Introduction**
+
+On October 31, 2000 the UN Security Council adopted resolution 1325, known as the Landmark resolution on Women, Peace and Security. This initiative calls for the increased participation of women and incorporation of gender perspectives in all UN peace and security efforts. In particular, it calls for women's participation in peace making processes in the wake of armed conflicts. While this resolution is undoubtedly a point of laudable progress in terms of increasing women's representation in governmental processes, it in some ways relies on the assumption that women are inherently more peaceful and conciliatory by nature. The widespread belief that women are predisposed to peacemaking underlies much of the rhetoric surrounding this resolution and permeates efforts promoting its implementation. But from where does this assumption arise? Is it true that women are inherently more conciliatory and less likely to engage in violent conflict? This analysis seeks to explore the assumption that women are naturally predisposed to peacemaking, by exploring the extent to which women actually participate in violent armed conflict. It is typically assumed out of hand that armed conflicts are the realm of men, and that women, if involved in the conflict at all, are relegated to roles of passive support or victim-hood. While it is true that women disproportionately suffer from the horrors of war, falling victim to forced recruitment for support roles as well as myriad forms of physical and sexual violence, women also routinely take up arms and join violent conflicts as active participants.
+
+Using an original data set of 170 armed civil conflicts globally from 1940 to 2017, I explore the degree and nature of women's participation in armed civil conflict. This data set is the result of exhaustive secondary source material searches including media reports, IGO/NGO reports, and scholarly works on specific conflicts. This rich qualitative data drawn from numerous sources for each conflict were coded to capture multiple aspects of the nature and degree of women's participation in armed conflict. This data set and analysis rely upon the definition of armed conflict developed by Upsalla Conflict Data Program (UCDP), which is "a contested incompatibility that concerns government and/or territory where the use of armed force between two parties, of which at least one is the government of a state, results in at least 25 battle-related deaths in one calendar year." As women's participation on the side of the state is largely dependent upon national policies regarding women's participation in armed forces, coding focused only upon the non-state armed groups involved in the conflict.
+
+This original data set measures women's active participation as a 4-point range, with 0 being "not-present,"" 1 being "limited"" (<25%), 2 being "moderate"" (25%-50%), and 3 being "extensive"" (women make up greater than 50% of armed combatants). In addition, the data captures a number of descriptive features of each conflict utilizing binary measures to indicate the presence or absence of women in passive roles and/or in leadership roles, whether or not women were reportedly coerced or voluntary participants, if women's groups were active members of the non-state armed group, whether the armed group espoused gender inclusive or exclusive ideology explicitly, whether women's issued factored among the groups major demands or objectives, and whether gender-based violence was reported within or against the armed group. The data set covers all conflicts that occurred between 1940 and 2017 globally, which meet the UCDP definition of civil war, resulting in 170 independent cases.
+
+
+**Description of the Data**
+
+The non-state armed groups covered in this data set incorporated women to widely varying degrees and in diverse ways. For instance, in Sri-Lanka the Liberation Tigers of Tamil Eelam (LTTE), a militant group of the ethnic Tamil minority, which waged a violent war against the state from 1972-2009, incorporated women to a large degree throughout the prolonged conflict. In sharp contrast to the relatively patriarchal nature of main-stream Sri-Lankan society, the LTTE was exceptionally egalitarian, not just incorporating women into the movement in all capacities, but also advocating for gender equality and women's rights. Women composed 25-30% of armed combatants, and made up one-quarter of its central leadership committee, while a designated Women's Front, established gender-specific goals for the movement. In contrast, the Lord's Resistance Army (LRA), which waged war on the Ugandan state from 1986-2015, not only relegated women to secondary status within its rank, but also was responsible for egregious abuses of women and girls. In the course of its long campaign against the state, the LRA notoriously pillaged the Ugandan countryside, abducting as many as 20,000 girls to fill its ranks. Within the LRA there was a strict gender hierarchy, excluding women from leadership roles and leaving them vulnerable to rampant sexual and physical abuse within the group. While some women and girls were forced into armed combat roles, most served as porters, cooks, nurses, war brides, and sex slaves. What factors account for such vast differences in regard to the nature of women's participation in such conflicts? What factors might lead to women voluntarily joining armed conflicts or dissuade women from participating?
+
+
+**Overview of Methods**
+
+The primary objective of this analysis is to answer the question how often and to what degree do women actively participate in armed conflicts throughout the world. As a secondary objective, I examine the correlation between descriptive characteristics of non-state armed groups and the extent to which women become active armed participants. For instance, are women more likely to take up arms in certain regions of the world than others? Have women begun taking up arms more often in recent decades as compared to earlier time periods? Does the presence of gender based violence within or against an armed group appear to dissuade women's active participation? Given that this is an original data set, with few similar precedents, there is much to learn from this type of descriptive analysis.
+
+The descriptive approach will focus upon examining correlative relationships between the nature of the non-state armed groups and women's participation as armed combatants and attempting to usefully visualize this data. The analysis will begin with an overview of the relevant data points in isolation, for instance the average rate of women's armed participation, and will be followed by using contingency tables and plots to present and visualize the observed relationship between descriptive characteristics of non-state armed groups and the extent of women's active participation in them as armed combatants.
+
+
+**Setup**
+
+To begin, we load the necessary r packages for data analysis, as well as the data itself:
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readr)
+```
+
+Next, we load the women_combatants data file:
+```{r}
+women_combatants <- read_csv("data/Women_Combatants_Data_r.csv", 
+    skip = 1)
+```
+
+
+**Data-Analysis/Discussion**
+
+Our first and most basic question, is just how often do women actually take up arms in the case of civil conflicts? In much of the literature on women and conflict, most emphasis is placed on the role of women as victims of conflict or at most as passive (and often gendered) support roles, such as nurses, cooks, prostitutes, porters, or spies. To test the assumption that women are more often limited to such support roles, and rarely become active combatants, we will begin using the data to conduct some some initial descriptive analysis.
+```{r}
+Women_Active <- mean(women_combatants$active_roles) * 100
+
+Women_Active
+
+Women_Passive <- mean(women_combatants$passive_roles) * 100
+
+Women_Passive
+```
+Contrary to common gender narratives of conflict, which relegate women to roles of passive supporters or victims, we find that women joined civil conflicts as active combatants in the majority (`r round(Women_Active, 2)`%) of cases. The frequency with which women filled passive support roles may also be surprising, as in `r round(Women_Passive, 2)`% of cases, women supported non-state armed groups in a variety non-combat roles.
+
+In what other ways have women contributed to non-state armed movements? Let's look at the extent to which women have made up the central leadership of non-state armed groups during the course of their campaigns:
+```{r}
+Women_Leaders <- mean(women_combatants$leadership) * 100
+
+Women_Leaders 
+```
+Based on this data, we find that women were included in the central leadership in `r round(Women_Leaders, 2)`% of cases. While still in the minority, women being in the central leadership in more than one-third of all non-state armed groups is a notable portion.
+
+
+In light of these findings, it is important to understand the degree to which this trend has changed over time. Is women's participation as armed combatants a new phenomenon or something common overtime that has simply been under estimated? To examine this temporal trend, we group the data by decade to make plotting it a bit more manageable and easier to interpret.
+```{r}
+women_combatants <- women_combatants %>%
+    mutate(decade = case_when(end_year %in% 1940:1949 ~ "1940s",
+                              end_year %in% 1950:1959 ~ "1950s",
+                              end_year %in% 1960:1969 ~ "1960s",
+                              end_year %in% 1970:1979 ~ "1970s",
+                              end_year %in% 1980:1989 ~ "1980s",
+                              end_year %in% 1990:1999 ~ "1990s",
+                              end_year %in% 2000:2009 ~ "2000s",
+                              end_year %in% 2010:2019 ~ "2010s"))
+```
+
+Then we can plot the degree of women's active participation in non-state armed conflicts by decade.
+```{r}
+Time_Trend <- ggplot(women_combatants, aes(x = decade, y = extent_active)) +
+  geom_col() +
+  xlab("Decade") +
+  ylab("Extent of Active Roles") +
+  ggtitle("Extent of Women Combatants in Civil Conflicts over Time")
+
+Time_Trend 
+```
+
+There are several important points to note before interpreting this graph. First, both the 1940s and 2010s are not complete decades, as the earliest case in the data set starts in 1943 and data was only collected on conflicts through 2017. In addition, the data is skewed by the relative number of conflicts in each decade. As the following frequency table indicates, the most conflicts in a given decade were in the 1990s and 1970s:
+```{r}
+count(women_combatants, decade)
+```
+Thus, the spikes in women's active participation in the 1970s and 1990s are not as significant as they initially appear. Considering the relative number of conflicts in each year, however, there appears to be a notable increase in the degree of women's active participation beginning in the 2000s. While the 1950s, 60s, 80s and 2000s, each had a similar number of conflicts (18, 17, 16, & 15, respectively), the extent of women's active participation relative to the number of conflicts nearly doubled in the 2000s. While the data for the 2010s is not complete, the trend of increased women's participation in active roles seems to be continuing in present decade.
+
+To see if this general trend applies to women's involvement in leadership roles of non-state armed groups, we plot the data again by decade, this time showing the extent to which women were involved in the central leadership of non-state armed groups.
+```{r}
+Leadership_Trend <- ggplot(women_combatants, aes(x = decade, y = leadership)) +
+  geom_col() +
+  xlab("Decade") +
+  ylab("Women in Central Leadership") +
+  ggtitle("Extent of Women in Leadership of Nonstate Armed Groups over Time")
+
+Leadership_Trend 
+```
+
+This plot shows that the same trend holds true for women in leadership roles. Taking into account the reasons for the spikes in the 1970s and 1990s, there seems to be an even more visible trend regarding women's increased roles in leadership positions over time.
+
+
+Does women's participation as armed combatants also vary depending upon geographic region? We can visualize the data to shed light on this by graphing the extent of women in active roles by region.
+```{r}
+Region_Trend <- ggplot(women_combatants, aes(x = region, y = extent_active)) +
+  geom_col() +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
+  xlab("Region") +
+  ylab("Extent of Active Roles") +
+  ggtitle("Extent of Women Combatants in Civil Conflicts by Region")
+
+Region_Trend
+```
+
+Again, before interpreting this data, we should consider the relative concentration of conflicts by region. We can again use a frequency table to quickly check this.
+```{r}
+count(women_combatants, region)
+```
+Again, based on this data the trend of women's participation largely corresponds to the relative concentration of conflicts, suggesting that women's active engagement in non-state armed groups is a global phenomenon. However, based on relative concentrations, it appears that women are somewhat more likely to be active combatants in conflicts in Asia as well as Central/South America. Though Asia experienced only 33 armed conflicts in this period, women were more active in conflicts there than in the Middle East, which had 48 armed conflicts. Similarly, though there were only 9 conflicts in both Central and South America during this time period, they had as many or more women engaged in active combat roles than in Europe, which had 14.
+
+Considering these factors, let's now combine both regional and temporal data to see if any notable trends emerge in this regard. To do this we produce a graph for each region ploting the extent of women's active participation in armed conflict by decade.
+```{r}
+ggplot(women_combatants, aes(x = decade, y = extent_active)) +
+  geom_col() +
+  facet_wrap(~region) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
+  xlab("Decade") +
+  ylab("Extent of Active Roles") +
+  ggtitle("Extent of Women Combatants in Civil Conflicts by Region over Time")
+```
+
+Based on this data, it seems that women's active participation in armed conflicts has generally increased over time in both the Middle East and Sub-Saharan Africa, while in Asia, as well as Central and South America, women's participation peaked in the 1970s. There was little discernible trend in Oceania and Europe in part no doubt from the limited number of conflicts in these regions. The peak of women's active participation in Asia and Central/South America in the 1970s may correspond to the number of Marxist conflicts unfolding during that time, which tended towards being gender inclusive and relatively egalitarian. An interesting point for further research would be to analyze the degree of women's participation in armed conflict based on the ideology of non-state armed groups.
+
+
+Much of the literature around women in conflict emphasizes the extent to which women are forced or coerced into participating in armed conflicts. To test this assumption we look at the extent to which women were either voluntary or forced/coerced participants in this sample of armed conflicts. Importantly this variable captures both passive and active participation and is not just limited to women's participation as armed combatants.
+```{r}
+Voluntary_Participation <- mean(women_combatants$voluntary) * 100
+
+Voluntary_Participation 
+
+Coerced_Participation <- mean(women_combatants$coerced) * 100
+
+Coerced_Participation
+```
+Contrary to the dominant narrative on women in conflict, we find that women voluntarily joined non-state armed groups to fill active or passive roles in the majority (`r round(Voluntary_Participation, 2)`%) of cases. In contrast, women were coerced or forced into participating in `r round(Coerced_Participation, 2)`% of conflicts. While this is a notable number, it is perhaps less common than previously thought.
+
+It is important to note that coerced and voluntary participation were not coded as mutually exclusive. Thus, in some conflicts there may have been a mix of both voluntary and forced or coerced women participants. This raises the question as to whether or not the coerced participation of some women might dissuade other women from voluntarily joining an armed movement. To examine this dynamic, we plot the two side by side.
+```{r}
+ggplot(data = women_combatants, aes(x = decade, y = voluntary)) +
+  geom_col() +
+  facet_wrap(~coerced)
+```
+
+According to these plots, we see that, generally speaking, in cases where women were forced or coerced into joining non-state armed groups, fewer women voluntarily joined the movements. A notable exception to this is in the 2000s and 2010s, where conflicts involving women's coerced participation actually also had a higher number of women voluntarily joining the movements. This seems a bit counter intuitive, and may be one aspect needing further research.
+
+
+Related to this idea that forced/coerced participation by women might discourage other women from voluntarily joining non-state armed groups, is the notion that reported instances of gender-based violence and discrimination might impact women's participation. Logically, we might expect that in the presence of discrimination and gender-based violence within a non-state armed group, fewer women would voluntarily join such groups. We can assess this claim by producing a couple of contingency tables to visualize the extent of women's voluntary participation in the presence or absence of discrimination and gender-based violence within non-state armed group.
+```{r}
+table(violence_in = women_combatants$violence_within, voluntary = women_combatants$voluntary)
+```
+Based on this table, it appears that there is a correlation between reports of gender-based violence within non-state armed groups and women's voluntary participation. Reports of gender-based violence within non-state armed groups appear to decrease the extent to which women voluntarily join such movements.
+
+We can utilize a similar table to see the effects of gender-based discrimination on women's voluntary participation.
+```{r}
+table(discrimination = women_combatants$violence_within, active = women_combatants$voluntary)
+```
+Based on this table, there actually appears to be significantly greater gender discrimination in non-state armed groups when women were voluntary participants. It is likely that women's increased presence may simply lead to more opportunities for gender discrimination and thus an increased likelihood of such reports. Similarly, it is plausible that in many cases women's active participation was met with resistance by male members in such groups and may have led to greater discrimination. In any case, it does not appear that gender discrimination notably deterred women from voluntarily joining such groups.
+
+
+There is some evidence that gender-based violence perpetrated by the state might encourage women to take up arms and join non-state armed groups, both to protect themselves from such violence and in retaliation for such gender violence. In this case we use a contingency table to assess the extent of women's active participation in the presence or absence of gender-based violence by the state against non-state armed groups (or the populations perceived to make up armed groups).
+```{r}
+table(violence_out = women_combatants$violence_against, active = women_combatants$active_roles)
+```
+In the case of gender-based violence reported against non-state armed groups, it appears that there was a trend towards more women taking up arms and joining the movement in cases where such violence occurred. This suggests that state gender violence against armed groups may be a catalyst prompting women to join the ranks of armed combatants as a way of challenging this gender-based violence.
+
+
+Thus far, it appears that more women than previously thought join non-state armed groups as active combatants and many do so voluntarily even in the face of or despite, discrimination and gender-based violence withing those groups. This raises a question of the general degree to which armed groups actively try to recruit women or support women's participation. To begin examining this, we start by looking at how often non-state armed groups explicitly express gender inclusive or exclusive ideology and how often campaigns articulate women's issues as being part of their central demands.
+```{r}
+Gender_Exclusive <- mean(women_combatants$gender_exclusive) * 100
+
+Gender_Exclusive
+
+Gender_Inclusive <- mean(women_combatants$gender_inclusive) * 100
+
+Gender_Inclusive
+
+Womens_Issues <- mean(women_combatants$issues_central) * 100
+ 
+Womens_Issues
+```
+We find that based on this sample, relatively few groups, only `r round(Gender_Exclusive, 2)`%, explicitly espouse gender exclusive ideology. A still small, but notable portion of groups (`r round(Gender_Inclusive, 2)`%) explicitly advocate a gender inclusive ideology. A considerably smaller proportion of non-state armed groups, `r round(Womens_Issues, 2)`%, incorporated women's issues among their central demands
+
+Unsurprisingly, the following contingency table shows that for groups with gender exclusive ideology, very few had active women participants. Notably, however, gender exclusive ideology did not prevent or completely dissuade women from joining such movements as active members in all cases.
+```{r}
+table(exclusive = women_combatants$gender_exclusive, active = women_combatants$active_roles)
+```
+
+Similarly, in nearly all cases, groups that espoused gender inclusive ideology had active women combatants among their ranks. And in nearly all cases of campaigns that incorporate women's issues among their central demands, women combatants participated in the movements.
+```{r}
+table(inclusive = women_combatants$gender_inclusive, active = women_combatants$active_roles)
+```
+
+
+To explore some further trends regarding the degree of women's active participation in armed conflict, the data is also broken up by geographical region and visualized in the following contingency table:
+```{r}
+table(region = women_combatants$region, active = women_combatants$active_roles)
+```
+
+
+Given that women's active participation in armed conflicts generally seems to have increased over time, it is reasonable to think that this may be due to changes in the gender ideology of non-state groups over time. We can assess this claim by plotting the gender-inclusiveness of non-state armed groups over time.
+```{r}
+ggplot(women_combatants, aes(x = decade, y = gender_inclusive)) +
+  geom_col() +
+  xlab("Decade") +
+  ylab("Gender Inclusivity") +
+  ggtitle("Extent of Gender Inclusive Ideology of Nonstate Armed Groups over Time")
+```
+
+While there does appear to be a general trend towards increased gender inclusive ideology among non-state armed groups over time, there is a notable spike in such gender inclusive ideology in the 1970s.
+
+Does this trend also apply to the tendency of non-state armed groups incorporating women's issues into their central demands? We can assess this by producing a similar plot, but this time focusing on women's issues being central to the campaign demands. This means that the overall campaign, not just women involved, advocated for women's rights in regard to their main objectives. This might include proposing women's full political participation in the revolutionary government they hoped to create or fighting for some aspect of social or economic gender equality.
+```{r}
+ggplot(women_combatants, aes(x = decade, y = issues_central)) +
+  geom_col() +
+  xlab("Decade") +
+  ylab("Women's Issues Central to Campaign") +
+  ggtitle("Centrality of Women's Issues to Nonstate Armed Groups over Time")
+```
+
+From this, plot it is clear that women's issues being central to the campaign's demands followed roughly the same trend as gender inclusive ideology with a tendency to be most common among campaigns in the 1970s. However, there is a notable drop in women's issues being central to campaign demands in the 2010s. The spike in the 1970s is most likely due to the proliferation of Marxist non-state armed groups during this time period. While the decline in the 2010s may be due to the number of non-state armed groups advocating fundamentalist interpretations of Islam during this period. In both cases, further research is needed to confirm these assumptions.
+
+However, we can quickly assess the potential validity of this claim by plotting the extent of gender-exclusive ideology over time to see if this trend appears to be true.
+```{r}
+ggplot(women_combatants, aes(x = decade, y = gender_exclusive)) +
+  geom_col() +
+  xlab("Decade") +
+  ylab("Gender Exclusive Ideology") +
+  ggtitle("Extent of Gender Exclusive Ideology in Nonstate Armed Groups over Time")
+```
+
+Indeed, we see a marked increase in gender exclusive ideology in the 2010s, which lends credence to the claim that this may be related to the proliferation of non-state armed groups driven by radical fundamentalist interpretations of Islam during this period.
+
+
+**Conclusion**
+
+This exploratory descriptive analysis, has identified several interesting trends regarding women's armed participation in civil conflicts. First and foremost, it is clear that women have taken up arms and engaged in active combat roles in the majority civil conflicts over the past half century. This finding runs counter to commonly asserted beliefs that women's roles in conflict are typically limited to victim-hood or passive support. Similarly, women have been involved in the central leadership of such groups in more than one in three cases, which runs counter to the expectation that women are naturally inclined to peacemaking or typically opposed to violent conflict. In addition, it appears that women's active participation in armed conflict has generally increased over time, though it is not a strong temporal trend since women regularly engaged in combat roles in the post-WWII time period. Similarly, the trend is not limited to specific regions, as women across the globe joined non-state armed groups in active roles. Though the Asian region as well as Central and South America appeared to have relatively more women combatants than other regions with similar levels of conflict. It is also notable, that while gender-based violence reported within non-state armed groups appears to have a deterrence effect, perhaps dissuading some women from voluntarily joining such groups, violence against women by the state appeared to increase the active participation of women in non-state armed groups. This suggests that in some cases women's participation in armed combat roles might be provoked by a desire to protect themselves from state aggression or to retaliate against gendered violence. Finally, gender inclusive ideology of non-state armed groups appears to have been gradually increasing over time, though the prevalence of such groups incorporating women's issues among their central demands appears to have peaked in the 1970s. This trend suggests that there is generally a greater openness to having women participate in non-state armed groups, but that women's issues are not necessarily a priority for the majority of campaigns.
+
+In addition, the analysis raises several questions necessitating further research and exploration. One interesting question for future exploration is the extent to which the specific ideology of non-state armed groups influences the degree of women's active participation. It was suggested that the Marxist ideology espoused by many non-state armed groups in the 1970s might be the reason for higher levels of women's active participation in conflicts during this time period. Similarly, this preliminary analysis indicates that the proliferation of non-state armed groups driven by fundamentalist interpretations of Islam might be a reason for women's lower levels of participation in civil conflicts in the 2010s as compared to the previous decade and for the greater extent of gender-exclusive ideology during this period. In both cases, however, further research is needed to confirm these hypotheses. Another correlation worth further study is the impact of gender-based violence by the state on the tendency of women to join non-state armed groups in active combat roles. It appears that the presence of such gender violence enacted by the state might have a motivating influence, prompting women to take up arms against the state either as a means of protection or in retaliation. The dynamics of this relationship merit further investigation and may be used as a means of dissuading states from engaging in such gender-based violence in the interest of limiting opposition to the state. Finally, it may be worthwhile to explore the relationship between women's forced/coerced participation and women's voluntary participation in civil conflicts. In particular, the trend in the 2000s and 2010s, which seems to indicate that the forced/coerced participation of women does not dissuade other women from voluntarily joining non-state armed groups. This counter intuitive finding merits further research to understand the dynamics that might be driving this, as in other time periods there seemed to be a clear correlation between fewer women voluntarily joining non-state armed groups in the presence of forced/coerced participation of other women.
+
+In any case, this exploratory descriptive analysis shows that women's involvement in civil conflicts is both more prevalent and more complex than common narratives suggest. The data shows that women make up active and passive combatants in the majority of non-state armed groups and even rise to positions of central leadership in a notable number of cases. While many women are forced or coerced into participation, and at times relegated to passive roles, many women also voluntarily join such movements and willingly take up arms. They may do so in support of the campaign, particularly when it is a movement advocating for women's issues or at least espousing gender inclusive ideology, even in the face of discrimination and gender-based violence within such campaigns. Additionally, they may choose to take up arms to fight against an abusive state, especially in cases where the state engages in violence against women. Though the extent of women's active participation in such conflicts may be gradually increasing, it is not a simple temporal or geographic trend, indicating that it is in fact a common global occurrence to have women actively engaged in civil conflicts. Though this analysis has raised many questions requiring further inquiry, one thing is certain. Women frequently take up arms to wage war against the state, indicating that commonly held notions of women as passive supporters, victims, or peacemakers need revision.
